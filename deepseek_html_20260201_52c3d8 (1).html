@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#ff5e8e">
+    <meta property="og:title" content="Will You Be My Valentine? 💘">
+    <meta property="og:description" content="A fun Valentine's Day surprise with interactive buttons!">
+    <meta property="og:image" content="https://images.unsplash.com/photo-1518568814500-bf0f8d125f46?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=400&q=80">
+    <meta property="og:url" content="https://yourdomain.com/valentine.html">
+    <title>Will You Be My Valentine? 💘</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💖</text></svg>">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: linear-gradient(135deg, #ffafbd, #ffc3a0);
+            min-height: 100vh;
+            min-height: -webkit-fill-available;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            position: relative;
+            touch-action: manipulation;
+            padding: 20px;
+        }
+
+        html {
+            height: -webkit-fill-available;
+        }
+
+        .container {
+            text-align: center;
+            padding: 30px 25px;
+            background-color: rgba(255, 255, 255, 0.97);
+            border-radius: 25px;
+            box-shadow: 0 15px 35px rgba(214, 41, 92, 0.3);
+            position: relative;
+            z-index: 10;
+            max-width: 500px;
+            width: 100%;
+            border: 8px solid #ff5e8e;
+            animation: pulse 2s infinite alternate;
+            margin-bottom: 25px;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 15px 35px rgba(214, 41, 92, 0.3); }
+            100% { box-shadow: 0 25px 45px rgba(214, 41, 92, 0.5); }
+        }
+
+        .heart-icon {
+            color: #ff5e8e;
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            animation: heartbeat 1.5s infinite;
+        }
+
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            5% { transform: scale(1.1); }
+            10% { transform: scale(1); }
+            15% { transform: scale(1.2); }
+            50% { transform: scale(1); }
+            100% { transform: scale(1); }
+        }
+
+        h1 {
+            color: #d6295c;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 0px #ffc0cb;
+            word-wrap: break-word;
+        }
+
+        .question {
+            font-size: 1.6rem;
+            color: #a8325e;
+            margin-bottom: 35px;
+            font-weight: bold;
+            line-height: 1.4;
+        }
+
+        .buttons-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        button {
+            padding: 22px 30px;
+            font-size: 1.6rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+            min-height: 75px;
+            width: 100%;
+        }
+
+        #yes-btn {
+            background: linear-gradient(to right, #ff5e8e, #ff2e63);
+            color: white;
+            position: relative;
+            z-index: 5;
+        }
+
+        #yes-btn:active {
+            transform: scale(0.98);
+            box-shadow: 0 5px 10px rgba(255, 46, 99, 0.4);
+        }
+
+        #no-btn {
+            background: linear-gradient(to right, #b0b0b0, #808080);
+            color: white;
+            position: relative;
+            cursor: not-allowed;
+            user-select: none;
+        }
+
+        .balloon {
+            position: absolute;
+            width: 50px;
+            height: 65px;
+            border-radius: 50%;
+            z-index: 1;
+            touch-action: none;
+            pointer-events: none;
+        }
+
+        .balloon:before {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 15px;
+            background-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .balloon:nth-child(3n) {
+            background: radial-gradient(circle at 30% 30%, #ff5e8e, #d6295c);
+        }
+
+        .balloon:nth-child(3n+1) {
+            background: radial-gradient(circle at 30% 30%, #ffafbd, #ff8fa3);
+        }
+
+        .balloon:nth-child(3n+2) {
+            background: radial-gradient(circle at 30% 30%, #ffd3b6, #ffaaa5);
+        }
+
+        .hearts-container {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .heart {
+            position: absolute;
+            color: rgba(255, 94, 142, 0.7);
+            font-size: 1.5rem;
+            animation: float 6s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .message {
+            display: none;
+            margin-top: 25px;
+            padding: 20px;
+            background-color: #fff0f5;
+            border-radius: 20px;
+            border: 3px dashed #ff5e8e;
+            color: #a8325e;
+            font-size: 1.4rem;
+            font-weight: bold;
+            line-height: 1.5;
+        }
+
+        .counter {
+            margin-top: 20px;
+            font-size: 1.2rem;
+            color: #a8325e;
+            font-weight: bold;
+        }
+
+        /* Share Container */
+        .share-container {
+            background: white;
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            margin-top: 20px;
+            border: 4px solid #ffafbd;
+        }
+
+        .share-container h2 {
+            color: #d6295c;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+
+        .share-options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .share-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            padding: 18px;
+            background: linear-gradient(to right, #ffafbd, #ffc3a0);
+            border: none;
+            border-radius: 15px;
+            font-size: 1.3rem;
+            color: #a8325e;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .share-btn:active {
+            transform: scale(0.98);
+        }
+
+        .share-btn i {
+            font-size: 1.5rem;
+        }
+
+        .qr-container {
+            margin-top: 25px;
+            padding: 20px;
+            background: #fff0f5;
+            border-radius: 15px;
+            border: 3px dashed #ff5e8e;
+        }
+
+        .qr-code {
+            width: 180px;
+            height: 180px;
+            margin: 0 auto 15px;
+            background: white;
+            padding: 10px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: monospace;
+            font-size: 0.9rem;
+            line-height: 1;
+            word-break: break-all;
+            border: 2px solid #ff5e8e;
+        }
+
+        .qr-text {
+            font-size: 1.1rem;
+            color: #a8325e;
+            margin-bottom: 10px;
+        }
+
+        .url-container {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f8f8;
+            border-radius: 10px;
+            border: 2px solid #ffc0cb;
+        }
+
+        .url-text {
+            font-size: 1rem;
+            color: #333;
+            word-break: break-all;
+            font-family: monospace;
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+
+        .copy-btn {
+            margin-top: 15px;
+            padding: 12px 25px;
+            background: linear-gradient(to right, #ff5e8e, #ff2e63);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .copy-btn:active {
+            transform: scale(0.98);
+        }
+
+        .footer {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1rem;
+            margin-top: 25px;
+            padding: 0 15px;
+        }
+
+        /* iOS-specific adjustments */
+        @supports (-webkit-touch-callout: none) {
+            button {
+                padding: 24px 30px;
+            }
+            
+            .container {
+                padding: 35px 25px;
+            }
+        }
+
+        /* Alert styling */
+        .custom-alert {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #fff0f5;
+            padding: 25px;
+            border-radius: 20px;
+            border: 4px solid #ff5e8e;
+            z-index: 1000;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            width: 85%;
+            max-width: 350px;
+            text-align: center;
+        }
+
+        .custom-alert-content {
+            font-size: 1.3rem;
+            color: #a8325e;
+            margin-bottom: 25px;
+            line-height: 1.4;
+        }
+
+        .custom-alert-btn {
+            padding: 15px 30px;
+            background: linear-gradient(to right, #ff5e8e, #ff2e63);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .alert-heart {
+            font-size: 2.5rem;
+            color: #ff5e8e;
+            margin-bottom: 15px;
+        }
+
+        /* Hide scrollbar for Safari */
+        ::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Balloons -->
+    <div class="balloons-container"></div>
+    
+    <!-- Floating hearts -->
+    <div class="hearts-container"></div>
+    
+    <!-- Main content -->
+    <div class="container">
+        <div class="heart-icon">
+            <i class="fas fa-heart"></i>
+        </div>
+        
+        <h1>Will You Be My Valentine? 💘</h1>
+        
+        <div class="question">
+            Tap "YES" if you'll be mine! 💖
+        </div>
+        
+        <div class="buttons-container">
+            <button id="yes-btn">YES! 💖</button>
+            <button id="no-btn">No 😢</button>
+        </div>
+        
+        <div class="counter">
+            Attempts to tap "No": <span id="counter">0</span>
+        </div>
+        
+        <div class="message" id="message">
+            Yay! I knew you'd say YES! 💖 You've made me the happiest person today! 
+            Let's celebrate this Valentine's Day together! 🥰
+        </div>
+    </div>
+
+    <!-- Share Container -->
+    <div class="share-container">
+        <h2>Share with Someone Special 💌</h2>
+        
+        <div class="share-options">
+            <button class="share-btn" id="share-native">
+                <i class="fas fa-share-alt"></i>
+                <span>Share via iPhone</span>
+            </button>
+            
+            <button class="share-btn" id="share-message">
+                <i class="fas fa-comment"></i>
+                <span>Send as Message</span>
+            </button>
+            
+            <button class="share-btn" id="share-copy">
+                <i class="fas fa-copy"></i>
+                <span>Copy Link</span>
+            </button>
+        </div>
+        
+        <div class="qr-container">
+            <div class="qr-text">Scan to open on another device:</div>
+            <div class="qr-code" id="qr-code">
+                <!-- QR code will be generated here -->
+                💖 Valentine 💘<br>
+                Will You Be Mine?
+            </div>
+        </div>
+        
+        <div class="url-container">
+            <div class="qr-text">Direct Link:</div>
+            <div class="url-text" id="url-text">https://valentine-surprise.com/for-you</div>
+            <button class="copy-btn" id="copy-url-btn">
+                <i class="fas fa-copy"></i> Copy URL
+            </button>
+        </div>
+    </div>
+
+    <div class="footer">
+        Made with <i class="fas fa-heart" style="color:#ff5e8e;"></i> for Valentine's Day
+    </div>
+
+    <script>
+        // Detect if user is on iPhone/iOS
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+        const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+        
+        // Create balloons
+        const balloonContainer = document.querySelector('.balloons-container');
+        const numBalloons = 10;
+        
+        for (let i = 0; i < numBalloons; i++) {
+            createBalloon();
+        }
+        
+        function createBalloon() {
+            const balloon = document.createElement('div');
+            balloon.classList.add('balloon');
+            
+            const size = Math.random() * 40 + 35;
+            const left = Math.random() * 100;
+            const animationDuration = Math.random() * 20 + 20;
+            
+            balloon.style.width = `${size}px`;
+            balloon.style.height = `${size * 1.3}px`;
+            balloon.style.left = `${left}vw`;
+            balloon.style.bottom = `-${size * 1.5}px`;
+            
+            // Add animation
+            balloon.style.animation = `floatUp ${animationDuration}s linear infinite`;
+            
+            balloonContainer.appendChild(balloon);
+            
+            // Remove and recreate balloon after animation completes
+            setTimeout(() => {
+                if (balloon.parentNode) {
+                    balloon.parentNode.removeChild(balloon);
+                    createBalloon();
+                }
+            }, animationDuration * 1000);
+        }
+        
+        // Add animation keyframes for balloons
+        const balloonStyle = document.createElement('style');
+        balloonStyle.textContent = `
+            @keyframes floatUp {
+                0% {
+                    transform: translateY(0) rotate(${Math.random() * 10 - 5}deg);
+                    opacity: 0;
+                }
+                10% {
+                    opacity: 1;
+                }
+                90% {
+                    opacity: 1;
+                }
+                100% {
+                    transform: translateY(-120vh) rotate(${Math.random() * 20 - 10}deg);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(balloonStyle);
+        
+        // Create floating hearts
+        const heartsContainer = document.querySelector('.hearts-container');
+        const numHearts = 15;
+        
+        for (let i = 0; i < numHearts; i++) {
+            createHeart();
+        }
+        
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            heart.innerHTML = '<i class="fas fa-heart"></i>';
+            
+            const left = Math.random() * 100;
+            const animationDuration = Math.random() * 4 + 4;
+            const delay = Math.random() * 5;
+            
+            heart.style.left = `${left}vw`;
+            heart.style.animationDuration = `${animationDuration}s`;
+            heart.style.animationDelay = `${delay}s`;
+            
+            heartsContainer.appendChild(heart);
+            
+            // Remove and recreate heart after animation
+            setTimeout(() => {
+                if (heart.parentNode) {
+                    heart.parentNode.removeChild(heart);
+                    createHeart();
+                }
+            }, animationDuration * 1000);
+        }
+        
+        // Button functionality
+        const yesBtn = document.getElementById('yes-btn');
+        const noBtn = document.getElementById('no-btn');
+        const message = document.getElementById('message');
+        const counterElement = document.getElementById('counter');
+        let counter = 0;
+        
+        // Function to move the "No" button
+        function moveNoButton() {
+            counter++;
+            counterElement.textContent = counter;
+            
+            // Get viewport dimensions
+            const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
+            const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
+            
+            // Get button dimensions
+            const btnWidth = noBtn.offsetWidth;
+            const btnHeight = noBtn.offsetHeight;
+            
+            // Calculate random position within viewport
+            const maxX = vw - btnWidth - 40;
+            const maxY = vh - btnHeight - 200; // Keep above share section
+            
+            const randomX = Math.max(20, Math.floor(Math.random() * maxX));
+            const randomY = Math.max(20, Math.floor(Math.random() * maxY));
+            
+            // Apply new position with smooth transition
+            noBtn.style.transition = 'left 0.3s, top 0.3s';
+            noBtn.style.position = 'fixed';
+            noBtn.style.left = `${randomX}px`;
+            noBtn.style.top = `${randomY}px`;
+            
+            // Add fun messages
+            if (counter === 3) {
+                showCustomAlert("The 'No' button is shy! Try tapping YES instead! 💖");
+            } else if (counter === 6) {
+                showCustomAlert("You're persistent! But I really want you to tap YES! 💕");
+            } else if (counter === 9) {
+                showCustomAlert("Okay, you're really trying! How about giving YES a chance? 😘");
+            } else if (counter === 12) {
+                showCustomAlert("The 'No' button loves playing hard to get! But YES is waiting for you! 💖");
+            }
+        }
+        
+        // Custom alert function for iOS
+        function showCustomAlert(text) {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = 'custom-alert';
+            alertDiv.innerHTML = `
+                <div class="alert-heart">
+                    <i class="fas fa-heart"></i>
+                </div>
+                <div class="custom-alert-content">${text}</div>
+                <button class="custom-alert-btn">OK</button>
+            `;
+            
+            document.body.appendChild(alertDiv);
+            
+            // Close alert when OK is clicked
+            alertDiv.querySelector('.custom-alert-btn').addEventListener('click', function() {
+                document.body.removeChild(alertDiv);
+            });
+            
+            // Auto-close after 4 seconds
+            setTimeout(() => {
+                if (document.body.contains(alertDiv)) {
+                    document.body.removeChild(alertDiv);
+                }
+            }, 4000);
+        }
+        
+        // Handle No button interactions
+        if (isIOS) {
+            // For iOS: use touch events
+            let touchStartTime;
+            let touchStartX, touchStartY;
+            
+            noBtn.addEventListener('touchstart', function(event) {
+                event.preventDefault();
+                touchStartTime = Date.now();
+                touchStartX = event.touches[0].clientX;
+                touchStartY = event.touches[0].clientY;
+                
+                // Small delay to allow for quick movement
+                setTimeout(() => {
+                    const currentTime = Date.now();
+                    if (currentTime - touchStartTime < 200) {
+                        moveNoButton();
+                    }
+                }, 50);
+            });
+            
+            noBtn.addEventListener('touchmove', function(event) {
+                event.preventDefault();
+                const touch = event.touches[0];
+                const deltaX = Math.abs(touch.clientX - touchStartX);
+                const deltaY = Math.abs(touch.clientY - touchStartY);
+                
+                // If finger moved significantly, move the button
+                if (deltaX > 30 || deltaY > 30) {
+                    moveNoButton();
+                }
+            });
+            
+            noBtn.addEventListener('touchend', function(event) {
+                event.preventDefault();
+                moveNoButton();
+            });
+        } else {
+            // For non-iOS: use mouse events
+            noBtn.addEventListener('mouseover', moveNoButton);
+            noBtn.addEventListener('click', function(event) {
+                event.preventDefault();
+                showCustomAlert("The 'No' button is not tappable! Try the YES button instead! 💖");
+                moveNoButton();
+            });
+        }
+        
+        // Yes button functionality
+        yesBtn.addEventListener('click', function() {
+            // Show message
+            message.style.display = 'block';
+            
+            // Hide buttons and counter
+            document.querySelector('.buttons-container').style.display = 'none';
+            document.querySelector('.counter').style.display = 'none';
+            
+            // Change the question
+            document.querySelector('.question').textContent = "You said YES! 💘";
+            
+            // Create celebration
+            createCelebration();
+            
+            // Update share section
+            document.querySelector('.share-container h2').textContent = "Share the Love! 💕";
+            
+            // Show success message
+            setTimeout(() => {
+                showCustomAlert("Yay! You made the right choice! 💖 Now share this with someone special!");
+            }, 500);
+        });
+        
+        // Celebration effect
+        function createCelebration() {
+            // Add more hearts
+            for (let i = 0; i < 25; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.classList.add('heart');
+                    heart.innerHTML = '<i class="fas fa-heart" style="color:#ff2e63;"></i>';
+                    
+                    const left = Math.random() * 100;
+                    const size = Math.random() * 30 + 20;
+                    
+                    heart.style.left = `${left}vw`;
+                    heart.style.fontSize = `${size}px`;
+                    heart.style.animationDuration = '3s';
+                    
+                    heartsContainer.appendChild(heart);
+                    
+                    setTimeout(() => {
+                        if (heart.parentNode) {
+                            heart.parentNode.removeChild(heart);
+                        }
+                    }, 3000);
+                }, i * 100);
+            }
+            
+            // Change background
+            document.body.style.background = 'linear-gradient(135deg, #ff5e8e, #ff2e63)';
+            
+            // Update container
+            const container = document.querySelector('.container');
+            container.style.borderColor = '#ffafbd';
+            container.style.boxShadow = '0 25px 50px rgba(255, 255, 255, 0.3)';
+        }
+        
+        // SHARE FUNCTIONALITY FOR iPHONE
+        const shareNativeBtn = document.getElementById('share-native');
+        const shareMessageBtn = document.getElementById('share-message');
+        const shareCopyBtn = document.getElementById('share-copy');
+        const copyUrlBtn = document.getElementById('copy-url-btn');
+        const urlText = document.getElementById('url-text');
+        
+        // Generate a unique URL for this page
+        const currentUrl = window.location.href;
+        const pageTitle = "Will You Be My Valentine? 💘";
+        const pageDescription = "A fun Valentine's Day surprise with interactive buttons! Try to tap the 'No' button!";
+        
+        // Update URL display
+        urlText.textContent = currentUrl;
+        
+        // Native iOS sharing
+        shareNativeBtn.addEventListener('click', function() {
+            if (navigator.share && isIOS) {
+                navigator.share({
+                    title: pageTitle,
+                    text: pageDescription,
+                    url: currentUrl
+                })
+                .then(() => showCustomAlert("Shared successfully! 💖"))
+                .catch(error => {
+                    console.log('Error sharing:', error);
+                    copyToClipboard();
+                });
+            } else {
+                // Fallback for non-share API browsers
+                copyToClipboard();
+                showCustomAlert("Link copied! Paste it to share with someone special! 💌");
+            }
+        });
+        
+        // Message sharing (opens messaging app)
+        shareMessageBtn.addEventListener('click', function() {
+            const messageText = `Check out this Valentine's Day surprise! ❤️ ${currentUrl}`;
+            
+            if (isIOS) {
+                // For iOS, try to open Messages app
+                window.open(`sms:&body=${encodeURIComponent(messageText)}`, '_blank');
+            } else {
+                // Fallback
+                const textArea = document.createElement('textarea');
+                textArea.value = messageText;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showCustomAlert("Message copied! Paste it in your messaging app! 💌");
+            }
+        });
+        
+        // Copy link functionality
+        shareCopyBtn.addEventListener('click', copyToClipboard);
+        copyUrlBtn.addEventListener('click', copyToClipboard);
+        
+        function copyToClipboard() {
+            const textArea = document.createElement('textarea');
+            textArea.value = currentUrl;
+            document.body.appendChild(textArea);
+            textArea.select();
+            
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    showCustomAlert("Link copied to clipboard! 📋 Share it with someone special! 💖");
+                    
+                    // Visual feedback on copy button
+                    const buttons = [shareCopyBtn, copyUrlBtn];
+                    buttons.forEach(btn => {
+                        if (btn) {
+                            const originalText = btn.innerHTML;
+                            btn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                            btn.style.background = 'linear-gradient(to right, #4CAF50, #45a049)';
+                            
+                            setTimeout(() => {
+                                btn.innerHTML = originalText;
+                                btn.style.background = '';
+                            }, 2000);
+                        }
+                    });
+                }
+            } catch (err) {
+                console.error('Failed to copy:', err);
+                showCustomAlert("Failed to copy link. Please select and copy the URL manually.");
+            }
+            
+            document.body.removeChild(textArea);
+        }
+        
+        // Generate QR code text (simple ASCII version)
+        const qrCodeElement = document.getElementById('qr-code');
+        const qrText = `💌VALENTINE💘\n${currentUrl.substring(0, 30)}...`;
+        qrCodeElement.innerHTML = qrText.replace(/\n/g, '<br>');
+        
+        // Welcome message
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                if (isIOS) {
+                    showCustomAlert("Welcome to the Valentine's Day surprise! 💖 Try tapping the buttons and share with someone special!");
+                } else {
+                    showCustomAlert("Welcome! 💖 Try clicking the buttons and share with someone special!");
+                }
+                
+                // Add to home screen prompt for iOS
+                if (isIOS && !window.navigator.standalone) {
+                    setTimeout(() => {
+                        showCustomAlert("💡 Tip: Tap the share button and 'Add to Home Screen' to save this for later!");
+                    }, 3000);
+                }
+            }, 1000);
+        });
+        
+        // Handle iOS orientation changes
+        window.addEventListener('orientationchange', function() {
+            setTimeout(() => {
+                // Recalculate button position
+                if (noBtn.style.position === 'fixed') {
+                    moveNoButton();
+                }
+            }, 300);
+        });
+        
+        // Prevent zoom on double-tap for iOS
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', function(event) {
+            const now = Date.now();
+            if (now - lastTouchEnd <= 300) {
+                event.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, false);
+    </script>
+</body>
+</html>
